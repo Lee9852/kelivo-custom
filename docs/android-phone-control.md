@@ -19,6 +19,7 @@
 - `scroll` / `swipe`：滚动节点或执行坐标滑动。
 - `back` / `home` / `recents` / `notifications` / `quick_settings`：系统导航。
 - `list_apps` / `open_app`：查询可启动应用并按包名打开。
+- `open_uri`：通过 Android `ACTION_VIEW` 打开 URI；当前允许 `http`、`https`、`orpheus`。可用于网易云 `orpheus://song/<id>/?autoplay=1` 与 `orpheus://playlist/<id>/?autoplay=1` 深链播放。
 
 节点与坐标操作需要最近一次 `read_screen` 的 `snapshot_id`。快照最多保留 30 秒；新读取和操作会使旧快照失效。
 

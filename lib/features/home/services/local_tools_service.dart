@@ -610,6 +610,9 @@ class LocalToolsService {
           'not checked against screen content, so read again if the screen may '
           'have moved on. '
           'list_apps discovers launchable package names; open_app opens one. '
+          'open_uri opens an http, https, or orpheus URI through Android. Use '
+          'orpheus deep links for NetEase Cloud Music playback when the user asks '
+          'to play a specific song or playlist. '
           'System navigation: back, home, recents, notifications, quick_settings. '
           'Ask the user to enable this service if unavailable; never change '
           'permissions yourself. Before sending messages, purchasing, deleting '
@@ -633,6 +636,7 @@ class LocalToolsService {
               'quick_settings',
               'list_apps',
               'open_app',
+              'open_uri',
             ],
           },
           'snapshot_id': {
@@ -661,6 +665,13 @@ class LocalToolsService {
           'package_name': {
             'type': 'string',
             'description': 'Launchable package from list_apps, for open_app.',
+          },
+          'uri': {
+            'type': 'string',
+            'description':
+                'URI to open for open_uri. Allowed schemes: http, https, orpheus. '
+                'For NetEase playback use orpheus://song/<id>/?autoplay=1 or '
+                'orpheus://playlist/<id>/?autoplay=1.',
           },
         },
         'required': ['action'],

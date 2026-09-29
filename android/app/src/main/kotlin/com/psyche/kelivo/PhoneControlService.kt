@@ -7,6 +7,7 @@ import android.app.KeyguardManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.graphics.Path
 import android.graphics.Point
 import android.graphics.Rect
@@ -208,6 +209,31 @@ class PhoneControlService : AccessibilityService() {
                         ensureActive()
                         startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
                         complete(JSONObject().put("success", true).put("package_name", name))
+                    }
+                }
+                "open_uri" -> {
+                    val raw = requiredString(args, "uri").trim()
+                    val uri = Uri.parse(raw)
+                    val scheme = uri.scheme?.lowercase().orEmpty()
+                    val allowedSchemes = setOf("https", "http", "orpheus")
+                    if (scheme !in allowedSchemes) {
+                        complete(error("URI_SCHEME_NOT_ALLOWED", "Only http, https, and orpheus URI schemes are allowed."))
+                    } else {
+                        clearSnapshot()
+                        ensureActive()
+                        try {
+                            val intent = Intent(Intent.ACTION_VIEW, uri)
+                                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            startActivity(intent)
+                            complete(
+                                JSONObject()
+                                    .put("success", true)
+                                    .put("uri", raw)
+                                    .put("scheme", scheme)
+                            )
+                        } catch (e: Exception) {
+                            complete(error("URI_OPEN_FAILED", e.message ?: "No app can open this URI."))
+                        }
                     }
                 }
                 "back", "home", "recents", "notifications", "quick_settings" -> {
